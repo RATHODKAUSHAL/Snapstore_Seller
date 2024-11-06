@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faBoxOpen, faCoins, faRocket, faNewspaper, faLock } from '@fortawesome/free-solid-svg-icons';
+import {  faAngleDown, faBoxOpen, faCoins, faRocket, faNewspaper, faLock, faUserShield, faChartLine, faTools } from '@fortawesome/free-solid-svg-icons';
 
 const DropdownItem = ({ icon, title, description }) => (
   <div className='flex flex-row pt-6 gap-2 items-center'>
@@ -48,13 +48,15 @@ const NavbarDropdown = ({ title, items }) => (
   </div>
 );
 
-const Navbar = ({ setShowLogin }) => {
+const Navbar = ({ setShowLogin, isLoggedIn, handleLogout }) => {
   const dropdownItems = [
     { icon: faNewspaper, title: "Get Ready to Sell", description: "Choose a selling plan, create and configure your seller account" },
     { icon: faRocket, title: "Enroll Your Brand", description: "Unlock brand-building tools and protection benefits" },
     { icon: faBoxOpen, title: "List Product", description: "Match or create product listings in Snapstore" },
     { icon: faCoins, title: "Price Product", description: "Set competitive prices to become the featured offer" },
   ];
+
+ 
 
   return (
     <div className='bg-white flex items-center justify-between h-20 w-full text-2xl border shadow-md fixed'>
@@ -63,20 +65,40 @@ const Navbar = ({ setShowLogin }) => {
           <a href='/' className='font-mono'>SnapStore</a>
         </div>
         <div className='flex flex-row text-base gap-10'>
-          <NavbarDropdown title="Start" items={dropdownItems} />
-          <NavbarDropdown title="Grow" items={dropdownItems} />
-          <NavbarDropdown title="Explore" items={dropdownItems} />
-          <NavbarDropdown title="Learn" items={dropdownItems} />
-          <NavbarDropdown title="Pricing" items={dropdownItems} />
+          {/* Conditionally render based on login status */}
+          {!isLoggedIn ? (
+            <>
+              <NavbarDropdown title="Start" items={dropdownItems} />
+              <NavbarDropdown title="Grow" items={dropdownItems} />
+              <NavbarDropdown title="Explore" items={dropdownItems} />
+              <NavbarDropdown title="Learn" items={dropdownItems} />
+              <NavbarDropdown title="Pricing" items={dropdownItems} />
+            </>
+          ) : (
+            <>
+              <a className='text-lg font-mono hover:underline' href='/dashboard'>Dashboard</a>
+              <a className='text-lg font-mono hover:underline' href='/productlist'>Product</a>
+              <a className='text-lg font-mono hover:underline' href='/selling'>Selling</a>
+              <a className='text-lg font-mono hover:underline' href='/services'>Services</a>
+            </>
+          )}
         </div>
       </div>
       <div className='pr-10 gap-4 flex flex-row'> 
-    <div>
-    <button className='text-base px-4 py-3 rounded-full font-medium text-black bg-gray-100'> <FontAwesomeIcon icon={faLock} /> Log in</button>
-    </div>
-<div>
-<button onClick={() => setShowLogin(true)} className='text-base  px-4 py-3 rounded-full text-white bg-orange-600'>Sign-Up</button>
-</div>        
+      {isLoggedIn ? (
+          <button onClick={handleLogout} className='text-base px-4 py-3 rounded-full font-medium text-black bg-gray-100'>
+            <FontAwesomeIcon icon={faLock} /> Logout
+          </button>
+        ) : (
+          <>
+            <button className='text-base px-4 py-3 rounded-full font-medium text-black bg-gray-100'>
+              <FontAwesomeIcon icon={faLock} /> Log in
+            </button>
+            <button onClick={() => setShowLogin(true)} className='text-base px-4 py-3 rounded-full text-white bg-orange-600'>
+              Sign-Up
+            </button>
+          </>
+        )}      
 </div>
     </div>
   );
