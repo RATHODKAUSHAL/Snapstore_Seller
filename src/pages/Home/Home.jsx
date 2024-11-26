@@ -47,14 +47,14 @@ const Home = () => {;
             <h4 className="text-xl font-medium">Global Selling</h4>
           </div>
           <header>
-            <p className="text-4xl md:text-6xl font-roboto-mono font-bold mt-4">
+            <p className="text-4xl md:text-6xl font-bold mt-4">
               Sell Worldwide With SnapStore
             </p>
             <p className="text-lg md:text-xl font-roboto-mono font-normal mt-4">
               Expand your reach by selling to SnapStore customers in other
               countries. Sell globally from the US, or sell from another country
               to US customers shopping on{" "}
-              <a className="underline" href="">
+              <a className="underline" href="http://127.0.0.1:8000/" target="_blank">
                 Snapstore.com
               </a>
               .

@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ProductForm = () => {
   const [image, SetImage] = useState(false);
+  const [category, setCategory] = useState([])
   
   const [data, setData] = useState({
     product_name: "",
@@ -20,8 +21,13 @@ const ProductForm = () => {
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
+    console.log(value);
     setData({ ...data, [event.target.name]: event.target.value });
   };
+
+  const onImageChange = (event) => {
+    SetImage(event.target.files[0]);
+  }
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -32,11 +38,11 @@ const ProductForm = () => {
     formData.append("category_id", data.category_id);
     formData.append("product_size", data.product_size);
     formData.append("product_price", data.product_price);
-    formData.append("product_image", data.product_image);
+    formData.append("product_image", image);
     formData.append("product_discount", data.product_discount);
     formData.append("product_description", data.product_description);
     formData.append("product_rating", data.product_rating);
-
+    console.log(data.category_id);
     const response = await axios.post(
       `http://127.0.0.1:8000/api/product`,
       formData
@@ -54,10 +60,28 @@ const ProductForm = () => {
         product_description: "",
         product_rating: "",
       });
+      SetImage(false)
     }else{
         console.log("Error", error)
     }
   };
+
+  const fetchCategory = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/category`);
+      if (response.data.success) {
+        console.log(response.data.category)
+        setCategory(response.data.category);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }
+  console.log(category);
+  
+  useEffect(() => {
+    fetchCategory()
+  },[])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200 p-10 pt-24">
@@ -67,6 +91,7 @@ const ProductForm = () => {
         </h1>
 
         <form onSubmit={onSubmitHandler} className="space-y-5">
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-semibold mb-1">
@@ -114,18 +139,21 @@ const ProductForm = () => {
               <label className="block text-sm font-semibold mb-1">
                 Category ID
               </label>
+             
               <select
-                type="text"
-                name="category_id"
-                value={data.category_id}
-                onChange={onChangeHandler}
-                className="w-full bg-gray-200 p-3 rounded-lg focus:outline-none"
-                placeholder="Enter category ID"
-              >
-               <option value={data.category_id}></option> 
-            {/* <option value={{ $Category->id }}>{{ $Category->category_name }}</option> */}
-            
-              </select>
+              name="category_id"
+              onChange={onChangeHandler}
+              value={data.category_id}
+              className="w-full bg-gray-200 p-3 rounded-lg focus:outline-none"
+            >
+              <option value="">Select a category</option>
+              {category.map((cat) => (
+                <option value={cat.id}>
+                  {cat.category_name}
+                </option>
+              ))}
+            </select>
+              
             </div>
 
             <div>
@@ -175,12 +203,12 @@ const ProductForm = () => {
                 Product Rating
               </label>
               <input
-                type="number"
+                type="text"
                 name="product_rating"
                 value={data.product_rating}
                 onChange={onChangeHandler}
                 className="w-full bg-gray-200 p-3 rounded-lg focus:outline-none"
-                placeholder="Enter product rating (1-5)"
+                placeholder="Enter product rating"
               />
             </div>
           </div>
@@ -204,12 +232,12 @@ const ProductForm = () => {
             </label>
             <input
             //   src={image}
-            value={data.product_image}
-              onChange={onChangeHandler}
+            // value={data.product_image}
+              onChange={onImageChange}
               type="file"
               name="product_image"
             //   onChange={handleImageChange}
-              className="w-full bg-gray-200 p-3 rounded-lg focus:outline-none text-gray-400"
+              className="w-full bg-gray-200  p-3 rounded-lg focus:outline-none text-gray-400"
             />
           </div>
 

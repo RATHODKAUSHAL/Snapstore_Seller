@@ -19,7 +19,7 @@ function App() {
     }
   }, []);
 
-  const handleLogin = () => {
+  const handlingLogin = () => {
     // Simulate a login function and set isLoggedIn state to true
     setIsLoggedIn(true);
     localStorage.setItem("isLoggedIn", "true"); // Save login status
@@ -40,14 +40,11 @@ function App() {
       />
 
       {showLogin && (
-        <SignUp setShowLogin={setShowLogin} handleLogin={handleLogin} />
+        <SignUp setShowLogin={setShowLogin} handlingLogin={handlingLogin} />
       )}
 
       <Routes>
-        <Route
-          path="/"
-          element={isLoggedIn ? <Navigate to="/dashboard" /> : <Home />}
-        />
+        <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Home />}/>
         <Route path="/dashboard" element={isLoggedIn ? <Dashboard/> : <Home/>} />
         <Route path="/product" element={isLoggedIn ? <Product/> : <Home/>} />
         <Route path="/productlist" element={isLoggedIn ? <Productlist/> : <Home/>} />
